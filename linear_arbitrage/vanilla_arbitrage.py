@@ -31,7 +31,9 @@ class LinearModelArbitrage:
         compute all opportunities for exchange and return list of dictionaries (target min 1%)
     """
 
-    def __init__(self, list_of_exchanges: t.List[str] | t.Tuple[str], symbols: t.List[str] | t.Tuple[str]) -> None:
+    def __init__(
+        self, list_of_exchanges: t.Union[t.List[str], t.Tuple[str]], symbols: t.Union[t.List[str], t.Tuple[str]]
+    ) -> None:
         """
         Parameters
         ----------
@@ -71,7 +73,7 @@ class LinearModelArbitrage:
         return f"List of exchange : {self.exchange_ids} \n" f"List of cypto : {self.symbols}"
 
     @property
-    def exchange_ids(self) -> t.List[str] | t.Tuple[str]:
+    def exchange_ids(self) -> t.Union[t.List[str], t.Tuple[str]]:
         return self._exchange_id
 
     @property
@@ -79,7 +81,7 @@ class LinearModelArbitrage:
         return self._exchanges
 
     @property
-    def symbols(self) -> t.List[str] | t.Tuple[str]:
+    def symbols(self) -> t.Union[t.List[str], t.Tuple[str]]:
         return self._symbols
 
     def _call_api(self, exchange_id: str, symbol: str) -> ResponseApiCcxt:
