@@ -63,4 +63,4 @@ jobs:
         pip install -r requirements.txt
         pip install pdoc3
     - name: Deploy Doc
-      run: pdoc --html linear_arbitrage --output-dir="Documentation"
+      run: pdoc --html linear_arbitrage --output-dir="docs" --force
