@@ -30,6 +30,7 @@ class LinearModelArbitrage:
     compute_opportunity()
         compute all opportunities for exchange and return list of dictionaries (target min 1%)
     """
+
     def __init__(self, list_of_exchanges: t.List[str] | t.Tuple[str], symbols: t.List[str] | t.Tuple[str]) -> None:
         """
         Parameters
@@ -57,16 +58,17 @@ class LinearModelArbitrage:
 
             for exchange_id in self._exchange_id:
                 exchange_class = getattr(ccxt, exchange_id)
-                self._exchanges[exchange_id] = exchange_class({
-                    **CONFIG_YAML[f"conf_{exchange_id}"],
-                    "enableRateLimit": True,
-                })
+                self._exchanges[exchange_id] = exchange_class(
+                    {
+                        **CONFIG_YAML[f"conf_{exchange_id}"],
+                        "enableRateLimit": True,
+                    }
+                )
 
                 self._exchanges[exchange_id].load_markets()
 
     def __repr__(self):
-        return f"List of exchange : {self.exchange_ids} \n" \
-               f"List of cypto : {self.symbols}"
+        return f"List of exchange : {self.exchange_ids} \n" f"List of cypto : {self.symbols}"
 
     @property
     def exchange_ids(self) -> t.List[str] | t.Tuple[str]:
@@ -135,8 +137,8 @@ class LinearModelArbitrage:
         for element_1 in response_api_for_symbol:
             consult.append(element_1.exchange_id)
             for element_2 in response_api_for_symbol:
-                condition_exchange = (element_1.exchange_id == element_2.exchange_id)
-                condition_symbol = (element_1.symbol == element_2.symbol)
+                condition_exchange = element_1.exchange_id == element_2.exchange_id
+                condition_symbol = element_1.symbol == element_2.symbol
                 if condition_exchange:
                     continue
                 elif element_2.exchange_id in consult:
@@ -144,8 +146,12 @@ class LinearModelArbitrage:
                 elif not condition_symbol:
                     continue
                 else:
-                    result = {"percentage": abs(1 - element_1.close / element_2.close)*100, "symbol": element_1.symbol,
-                              "exchange_1": element_1.exchange_id, "exchange_2": element_2.exchange_id}
+                    result = {
+                        "percentage": abs(1 - element_1.close / element_2.close) * 100,
+                        "symbol": element_1.symbol,
+                        "exchange_1": element_1.exchange_id,
+                        "exchange_2": element_2.exchange_id,
+                    }
                 global_arbitrage.append(result)
 
         return global_arbitrage

@@ -51,4 +51,3 @@ class ResponseApiCcxt:
     symbol: float
     timestamp: float
     vwap: float
-
