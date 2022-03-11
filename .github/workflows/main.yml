@@ -1,8 +1,10 @@
 name: Packaging arbitrage
 
 on:
+  workflow_dispatch:
   push:
     branches: [ $default-branch ]
+
 
 jobs:
   test:
@@ -44,6 +46,7 @@ jobs:
       run: python -m build
 
   deploy-docs:
+    needs: [build, test]
     runs-on: ubuntu-latest
 
     steps:
