@@ -3,7 +3,8 @@ name: Packaging arbitrage
 on:
   workflow_dispatch:
   push:
-    branches: [ $default-branch ]
+    branches:
+      - "**"
 
 
 jobs:
