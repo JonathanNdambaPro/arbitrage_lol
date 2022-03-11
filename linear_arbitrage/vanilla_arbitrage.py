@@ -43,12 +43,12 @@ class LinearModelArbitrage:
             List of all symbols we want to detect arbitrage
 
         """
-        if not isinstance(list_of_exchanges, t.Union[t.List[str], t.Tuple[str]]):
+        if not isinstance(list_of_exchanges, t.Union[t.List, t.Tuple]):
             message = "The list of exchanges as to be a sequence"
             logging.error(message)
             raise TypeError(message)
 
-        elif not isinstance(symbols, t.Union[t.List[str], t.Tuple[str]]):
+        elif not isinstance(symbols, t.Union[t.List, t.Tuple]):
             message = "symbols as to be a list or tuple"
             logging.error(message)
             raise TypeError(message)
@@ -74,6 +74,7 @@ class LinearModelArbitrage:
 
     @property
     def exchange_ids(self) -> t.Union[t.List[str], t.Tuple[str]]:
+
         return self._exchange_id
 
     @property
