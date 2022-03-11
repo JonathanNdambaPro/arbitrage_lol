@@ -23,8 +23,8 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install -r test-requierements.txt
-        pip install -r requierements.txt
+        pip install -r test-requirements.txt
+        pip install -r requirements.txt
     - name: Test with pytest
       run: pytest
 

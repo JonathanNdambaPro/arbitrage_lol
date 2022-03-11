@@ -1,3 +1,0 @@
-pytest==7.0.1
-pytest_mock==7.0.1
-pdoc==0.10.0
