@@ -1,0 +1,18 @@
+list_of_exchange:
+  - "binance"
+  - "okex"
+  - "bybit"
+
+conf_binance:
+  api_secret: "zAmjbOBXQqYHlGr01l4OEtzYGbuceQqWjj3jgHkHYJwBZOUMcoJ5fRxT8XWPNKiA"
+  api_key: "1O0A5IWwbQ1me4wTb3EyFjpjcdrS64REUwesQci3lpT7MUO3yzwgvis4vzL6ewUq"
+
+conf_okex:
+  api_secret: "138F3FBB276402A740ACB2FD3239B954"
+  api_key: "5cdabbed-a968-497e-b815-8d9910d01f43"
+
+conf_bybit:
+  api_secret: "yJqknElkoiwjuOwjsejYv8jpfOCe8MpT9Pl0"
+  api_key: "SYgdgVuZ4MrqDnhOMI"
+
+

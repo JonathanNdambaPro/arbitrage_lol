@@ -1,0 +1,35 @@
+name: Python package
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: check-config
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r test-requierements.txt
+        pip install -r requierements.txt
+    - name: Test with pytest
+      run: pytest
+    - name: Documentation
+      run: pdoc --html linear_arbitrage --output-dir="Documentation"
+
