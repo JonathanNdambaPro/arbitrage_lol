@@ -1,7 +1,16 @@
 list_of_exchange:
   - "binance"
   - "okex"
-  - "bybit"
+
+symbols:
+  - "BTG/USDT"
+
+name_columns_for_app:
+  - "exchange_1"
+  - "exchange_1"
+  - "percentage"
+  - "symbol"
+
 
 conf_binance:
   api_secret: "zAmjbOBXQqYHlGr01l4OEtzYGbuceQqWjj3jgHkHYJwBZOUMcoJ5fRxT8XWPNKiA"

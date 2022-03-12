@@ -5,6 +5,7 @@ import ccxt
 import yaml
 from linear_arbitrage.data_structure_ccxt import ResponseApiCcxt
 import logging
+import pandas as pd
 
 path_pwd = Path(".").resolve()
 PATH_TO_FOLDER = path_pwd / "config.yml"
@@ -63,7 +64,7 @@ class LinearModelArbitrage:
                 self._exchanges[exchange_id] = exchange_class(
                     {
                         **CONFIG_YAML[f"conf_{exchange_id}"],
-                        "enableRateLimit": True,
+                        "enableRateLimit": False,
                     }
                 )
 
@@ -154,6 +155,7 @@ class LinearModelArbitrage:
                         "symbol": element_1.symbol,
                         "exchange_1": element_1.exchange_id,
                         "exchange_2": element_2.exchange_id,
+                        "date": pd.to_datetime(int(element_2.timestamp), unit="ms"),
                     }
                 global_arbitrage.append(result)
 
