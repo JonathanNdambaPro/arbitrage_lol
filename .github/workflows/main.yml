@@ -48,15 +48,20 @@ jobs:
       run: python -m build
 
   deploy-on-heroku:
+    needs: [test, build-lib]
     runs-on: ubuntu-latest
     env:
       PUSH_PACKAGES: ${{ github.ref == 'refs/heads/main' && 'main'}}
-      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
     steps:
-      - uses: actions/checkout@v1
-      - name: Login to Heroku Container registry
-        run: heroku container:login
-      - name: Build and push
-        run: heroku container:push -a app web
-      - name: Release
-        run: heroku container:release -a app web
+      - name: Deploy an App Engine app
+        id: deploy-app
+        uses: google-github-actions/deploy-appengine@v0.1.0
+        with:
+          project: ${{ secrets.gcp_project }}
+          deliverables: app.yaml
+          credentials: ${{ secrets.gcp_credentials }}
+
+
+
+
+
