@@ -30,7 +30,7 @@ jobs:
     - name: Test with pytest
       run: pytest
 
-  build:
+  build-lib:
     needs: test
     runs-on: ubuntu-latest
 
@@ -47,20 +47,16 @@ jobs:
     - name: Build package
       run: python -m build
 
-  deploy-docs:
-    needs: [build, test]
+  deploy-on-heroku:
     runs-on: ubuntu-latest
-
+    env:
+      PUSH_PACKAGES: ${{ github.ref == 'refs/heads/main' && 'main'}}
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pdoc3
-    - name: Deploy Doc
-      run: pdoc --html linear_arbitrage --output-dir="docs" --force
+      - uses: actions/checkout@v1
+      - name: Login to Heroku Container registry
+        run: heroku container:login
+      - name: Build and push
+        run: heroku container:push -a app web
+      - name: Release
+        run: heroku container:release -a app web
