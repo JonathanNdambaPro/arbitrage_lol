@@ -45,7 +45,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install build
     - name: Build package
-      run: python -m build
+      run: python3 setup.py bdist_wheel
 
   deploy-on-heroku:
     needs: [test, build-lib]
@@ -53,13 +53,20 @@ jobs:
     env:
       PUSH_PACKAGES: ${{ github.ref == 'refs/heads/main' && 'main'}}
     steps:
-      - name: Deploy an App Engine app
-        id: deploy-app
-        uses: google-github-actions/deploy-appengine@v0.1.0
-        with:
-          project: ${{ secrets.gcp_project }}
-          deliverables: app.yaml
-          credentials: ${{ secrets.gcp_credentials }}
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Deploy to App Engine
+      id: deploy
+      uses: google-github-actions/deploy-appengine@v0.2.0
+      with:
+        deliverables: app.yaml
+        version: v1
+        project_id: ${{ secrets.GCP_PROJECT }}
+        credentials: ${{ secrets.GCP_CREDENTIALS }}
+
+    - name: Test
+      run: curl "${{ steps.deploy.outputs.url }}"
 
 
 
