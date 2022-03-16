@@ -54,23 +54,23 @@ jobs:
     env:
       PUSH_PACKAGES: ${{ github.ref == 'refs/heads/main' && 'main'}}
     steps:
-    - name: Initialize Google Cloud SDK
-      uses: zxyle/publish-gae-action@master
-      with:
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        project_id: ${{ secrets.PROJECT_ID }}
-        gae_variables: ${{ secrets.GAE_VARIABLES }}
+      - name: Checkout Repo
+        uses: actions/checkout@v2
 
-    - name: Publish app to Google App Engine
-      run: |
-        gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
-        gcloud config set project ${{ secrets.PROJECT_ID }}
-        gcloud -q app deploy app.yaml --promote
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          project_id: ${{secrets.PROJECT_ID}}
+          service_account_key: ${{secrets.GCP_SA_KEY}}
 
-    - name: Test
-      run: |
-        curl "${{ steps.deploy-on-app-engine.outputs.url }}"
+      - name: Deploy
+        uses: google-github-actions/deploy-appengine@v0.2.0
+        with:
+          deliverables: app.yaml
+          project_id: ${{ secrets.PROJECT_ID }}
+          credentials: ${{ secrets.GCP_SA_KEY }}
+          promote: true
+          version: v1
 
 
 
