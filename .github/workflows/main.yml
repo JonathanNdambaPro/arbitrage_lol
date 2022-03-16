@@ -61,11 +61,11 @@ jobs:
         env:
           SUPER_SECRET: ${{ secrets.GCP_CREDENTIALS }}
         run: |
-          example-command "$SUPER_SECRET"
+          echo "$SUPER_SECRET"
 
-      - id: "auth"
-        name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v0"
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
