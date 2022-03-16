@@ -56,6 +56,9 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+      - name: Show credential
+        run: echo ${{ secrets.GCP_CREDENTIALS }}
+
 
       - id: auth
         name: Authenticate to Google Cloud
