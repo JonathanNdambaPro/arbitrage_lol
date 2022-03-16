@@ -49,6 +49,7 @@ jobs:
       run: python3 setup.py bdist_wheel
 
   deploy-on-app-engine:
+    environment: myenvironment
     needs: [test, build-lib]
     runs-on: ubuntu-latest
     env:
