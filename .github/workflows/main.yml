@@ -67,7 +67,9 @@ jobs:
         credentials: ${{ secrets.GCP_CREDENTIALS }}
 
     - name: Test
-      run: curl "${{ steps.deploy.outputs.url }}"
+      run: |
+        echo "${{ secrets.GCP_PROJECT }}"
+        curl "${{ steps.deploy.outputs.url }}"
 
 
 
