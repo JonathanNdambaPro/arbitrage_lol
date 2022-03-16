@@ -53,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PUSH_PACKAGES: ${{ github.ref == 'refs/heads/main' && 'main'}}
+    steps:
     - name: Initialize Google Cloud SDK
       uses: zxyle/publish-gae-action@master
       with:
