@@ -50,6 +50,7 @@ jobs:
 
   deploy-on-app-engine:
     needs: [test, build-lib]
+    environment: gcp
     runs-on: ubuntu-latest
     env:
       PUSH_PACKAGES: ${{ github.ref == 'refs/heads/main' && 'main'}}
@@ -57,7 +58,8 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Authenticate to Google Cloud
+      - id: auth
+        name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v0
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
