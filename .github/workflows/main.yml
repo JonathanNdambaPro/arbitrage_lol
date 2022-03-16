@@ -48,28 +48,27 @@ jobs:
     - name: Build package
       run: python3 setup.py bdist_wheel
 
-  deploy-on-heroku:
+  deploy-on-app-engine:
     needs: [test, build-lib]
     runs-on: ubuntu-latest
     env:
       PUSH_PACKAGES: ${{ github.ref == 'refs/heads/main' && 'main'}}
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Deploy to App Engine
-      id: deploy
-      uses: google-github-actions/deploy-appengine@v0.2.0
+    - name: Initialize Google Cloud SDK
+      uses: zxyle/publish-gae-action@master
       with:
-        deliverables: app.yaml
-        version: v1
-        project_id: ${{ secrets.GCP_PROJECT }}
-        credentials: ${{ secrets.GCP_CREDENTIALS }}
+        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.PROJECT_ID }}
+
+    - name: Publish app to Google App Engine
+      run: |
+        gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
+        gcloud config set project ${{ secrets.PROJECT_ID }}
+        gcloud -q app deploy app.yaml --promote
 
     - name: Test
       run: |
-        echo "${{ secrets.GCP_PROJECT }}"
-        curl "${{ steps.deploy.outputs.url }}"
+        curl "${{ steps.deploy-on-app-engine.outputs.url }}"
 
 
 
