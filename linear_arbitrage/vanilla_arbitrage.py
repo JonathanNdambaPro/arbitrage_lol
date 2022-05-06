@@ -6,6 +6,7 @@ import yaml
 from linear_arbitrage.data_structure_ccxt import ResponseApiCcxt
 import logging
 import pandas as pd
+from itertools import combinations
 
 path_pwd = Path(".").resolve()
 PATH_TO_FOLDER = path_pwd / "config.yml"
@@ -106,7 +107,7 @@ class LinearModelArbitrage:
 
     def _multiple_call_concurrency(self) -> t.List[ResponseApiCcxt]:
         """
-        multi call with concurrency/multithread for specific symbal
+        multi call with concurrency/multithread for specific symbol
 
         Returns
         -------
@@ -122,6 +123,8 @@ class LinearModelArbitrage:
                     futures.append(executor.submit(self._call_api, exchange_id=exchange_id, symbol=symbol))
             for future in concurrent.futures.as_completed(futures):
                 responses.append(future.result())
+
+        responses.sort()
         return responses
 
     def compute_opportunity(self) -> t.List[t.Dict]:
@@ -135,28 +138,19 @@ class LinearModelArbitrage:
             with all information
         """
         response_api_for_symbol = self._multiple_call_concurrency()
-
-        consult = []
         global_arbitrage = []
-        for element_1 in response_api_for_symbol:
-            consult.append(element_1.exchange_id)
-            for element_2 in response_api_for_symbol:
-                condition_exchange = element_1.exchange_id == element_2.exchange_id
-                condition_symbol = element_1.symbol == element_2.symbol
-                if condition_exchange:
-                    continue
-                elif element_2.exchange_id in consult:
-                    continue
-                elif not condition_symbol:
-                    continue
-                else:
-                    result = {
-                        "percentage": abs(1 - element_1.close / element_2.close) * 100,
-                        "symbol": element_1.symbol,
-                        "exchange_1": element_1.exchange_id,
-                        "exchange_2": element_2.exchange_id,
-                        "date": pd.to_datetime(int(element_2.timestamp), unit="ms"),
-                    }
-                global_arbitrage.append(result)
+        all_combinaison = tuple(combinations(response_api_for_symbol, 2))
+
+        for element_1, element_2 in all_combinaison:
+            condition_symbol = element_1.symbol == element_2.symbol
+            if condition_symbol:
+                result = {
+                    "percentage": abs(1 - element_1.close / element_2.close) * 100,
+                    "symbol": element_1.symbol,
+                    "exchange_1": element_1.exchange_id,
+                    "exchange_2": element_2.exchange_id,
+                    "date": pd.to_datetime(int(element_2.timestamp), unit="ms"),
+                }
+            global_arbitrage.append(result)
 
         return global_arbitrage

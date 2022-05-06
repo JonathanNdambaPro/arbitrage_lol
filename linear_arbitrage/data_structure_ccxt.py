@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import datetime
 import typing as t
 
@@ -28,8 +28,9 @@ class InfoFromResponseApiCcxt:
     weightedAvgPrice: float
 
 
-@dataclass
+@dataclass(order=True)
 class ResponseApiCcxt:
+    sort_index: str = field(init=False, repr=False)
     exchange_id: str
     ask: float
     askVolume: float
@@ -51,3 +52,6 @@ class ResponseApiCcxt:
     symbol: float
     timestamp: float
     vwap: float
+
+    def __post_init__(self):
+        self.sort_index = self.exchange_id
