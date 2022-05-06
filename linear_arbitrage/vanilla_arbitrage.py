@@ -33,7 +33,7 @@ class LinearModelArbitrage:
     """
 
     def __init__(
-        self, list_of_exchanges: t.Union[t.List[str], t.Tuple[str]], symbols: t.Union[t.List[str], t.Tuple[str]]
+            self, list_of_exchanges: t.Union[t.List[str], t.Tuple[str]], symbols: t.Union[t.List[str], t.Tuple[str]]
     ) -> None:
         """
         Parameters
